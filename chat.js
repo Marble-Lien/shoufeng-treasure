@@ -1,5 +1,5 @@
 // ⚠️ 重要：請將下面的 YOUR_API_KEY_HERE 替換成你的真實 Gemini API Key
-const API_KEY = 'AIzaSyBWitWs68dfgbZ0JT8k88yPGITUUFGu82c';
+
 const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
 
 // 壽豐景點資料庫
