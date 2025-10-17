@@ -1,7 +1,6 @@
 // ⚠️ 重要：請將下面的 YOUR_API_KEY_HERE 替換成你的真實 Gemini API Key
 const API_KEY = 'AIzaSyBWitWs68dfgbZ0JT8k88yPGITUUFGu82c';
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
-
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
 
 // 壽豐景點資料庫
 const shoufengData = {
@@ -87,7 +86,11 @@ async function sendMessage() {
     
     if (!userMessage) return;
     
-    
+    // 檢查 API Key
+    if (API_KEY === 'YOUR_API_KEY_HERE') {
+        alert('⚠️ 請先設定你的 Gemini API Key！\n\n請編輯 chat.js 檔案，將 YOUR_API_KEY_HERE 替換成你的真實 API Key。');
+        return;
+    }
 
     // 隱藏快速問題按鈕
     const quickQuestions = document.getElementById('quickQuestions');
