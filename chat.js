@@ -48,7 +48,7 @@ const shoufengData = {
     routes: {
         halfDay: '建議路線：鯉魚潭（2小時）→ 花蓮糖廠吃冰（1小時）→ 立川漁場（1.5小時）',
         fullDay: '建議路線：壽豐車站（30分鐘）→ 豐田文史館（1小時）→ 鯉魚潭（2小時）→ 午餐 → 立川漁場（1.5小時）→ 花蓮糖廠（1小時）',
-        photo: '最適合拍照：鯉魚潭（湖景）、壽豐車站（復古風）、東華大學（校園美景）'
+        photo: '最適合拍照：鯉魚潭（湖景)、壽豐車站（復古風）、東華大學（校園美景）'
     }
 };
 
@@ -108,7 +108,7 @@ async function sendMessage() {
     const typingId = showTypingIndicator();
 
     try {
-        // 呼叫 Gemini API - 修正版
+        // 呼叫 Gemini API
         const response = await fetch(`${API_URL}?key=${API_KEY}`, {
             method: 'POST',
             headers: {
@@ -126,7 +126,6 @@ async function sendMessage() {
         // 移除載入動畫
         removeTypingIndicator(typingId);
 
-        // 詳細的錯誤處理
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
             console.error('API 錯誤詳情:', errorData);
@@ -150,13 +149,15 @@ async function sendMessage() {
         
         let errorMessage = '哎呀！發生錯誤了 😢\n\n';
         if (error.message.includes('API 錯誤: 400')) {
-            errorMessage += '請求格式錯誤。\n請確認：\n1. API Key 是否正確\n2. 網路連線是否正常\n3. 查看瀏覽器 Console (F12) 的詳細錯誤';
+            errorMessage += '請求格式錯誤。請檢查 API 設定。';
         } else if (error.message.includes('API 錯誤: 401')) {
-            errorMessage += 'API Key 無效或已過期。\n請重新申請 API Key。';
+            errorMessage += 'API Key 無效或已過期。';
         } else if (error.message.includes('API 錯誤: 403')) {
-            errorMessage += 'API 權限不足。\n可能是：\n1. 地區限制\n2. API 配額已用完\n3. 需要啟用 Generative Language API';
+            errorMessage += 'API 權限不足。';
+        } else if (error.message.includes('API 錯誤: 404')) {
+            errorMessage += '找不到 API 端點。模型名稱可能不正確。';
         } else if (error.message.includes('Failed to fetch')) {
-            errorMessage += '網路連線有問題，請檢查網路設定。';
+            errorMessage += '網路連線有問題。';
         } else {
             errorMessage += `錯誤訊息：${error.message}`;
         }
