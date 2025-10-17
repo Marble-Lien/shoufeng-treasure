@@ -1,7 +1,6 @@
-// ⚠️ 重要：請將下面的 YOUR_API_KEY_HERE 替換成你的真實 Gemini API Key
-const API_KEY = 'AIzaSyBWitWs68dfgbZ0JT8k88yPGITUUFGu82c';
-// ✅ 使用免費版支援的模型：gemini-1.5-flash
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+// ⚠️ 重要：請將下面的 YOUR_GROQ_API_KEY 替換成你的真實 Groq API Key
+const API_KEY = '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';
+const API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 
 // 壽豐景點資料庫
 const shoufengData = {
@@ -88,8 +87,8 @@ async function sendMessage() {
     if (!userMessage) return;
     
     // 檢查 API Key
-    if (API_KEY === 'YOUR_API_KEY_HERE') {
-        alert('⚠️ 請先設定你的 Gemini API Key！\n\n請編輯 chat.js 檔案，將 YOUR_API_KEY_HERE 替換成你的真實 API Key。');
+    if (API_KEY === 'YOUR_GROQ_API_KEY') {
+        alert('⚠️ 請先設定你的 Groq API Key！\n\n請編輯 chat.js 檔案，將 YOUR_GROQ_API_KEY 替換成你的真實 API Key。');
         return;
     }
 
@@ -108,18 +107,27 @@ async function sendMessage() {
     const typingId = showTypingIndicator();
 
     try {
-        // 呼叫 Gemini API
-        const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+        // 呼叫 Groq API
+        const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
+                'Authorization': `Bearer ${API_KEY}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: `${createSystemPrompt()}\n\n遊客問題：${userMessage}`
-                    }]
-                }]
+                model: 'llama-3.3-70b-versatile', // Groq 最好的免費模型
+                messages: [
+                    {
+                        role: 'system',
+                        content: createSystemPrompt()
+                    },
+                    {
+                        role: 'user',
+                        content: userMessage
+                    }
+                ],
+                temperature: 0.7,
+                max_tokens: 500
             })
         });
 
@@ -136,8 +144,8 @@ async function sendMessage() {
         console.log('API 回應:', data);
         
         // 顯示 AI 回應
-        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-            const aiResponse = data.candidates[0].content.parts[0].text;
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+            const aiResponse = data.choices[0].message.content;
             addAIMessage(aiResponse);
         } else {
             addAIMessage('抱歉，我現在無法回答，請稍後再試 😅');
@@ -151,13 +159,11 @@ async function sendMessage() {
         if (error.message.includes('API 錯誤: 400')) {
             errorMessage += '請求格式錯誤。請檢查 API 設定。';
         } else if (error.message.includes('API 錯誤: 401')) {
-            errorMessage += 'API Key 無效或已過期。';
-        } else if (error.message.includes('API 錯誤: 403')) {
-            errorMessage += 'API 權限不足。';
-        } else if (error.message.includes('API 錯誤: 404')) {
-            errorMessage += '找不到 API 端點。模型名稱可能不正確。';
+            errorMessage += 'API Key 無效或已過期。\n請重新申請 Groq API Key。';
+        } else if (error.message.includes('API 錯誤: 429')) {
+            errorMessage += '請求太頻繁，請稍後再試。';
         } else if (error.message.includes('Failed to fetch')) {
-            errorMessage += '網路連線有問題。';
+            errorMessage += '網路連線有問題，請檢查網路設定。';
         } else {
             errorMessage += `錯誤訊息：${error.message}`;
         }
@@ -281,8 +287,7 @@ document.getElementById('userInput')?.addEventListener('keypress', function(e) {
 // 頁面載入完成後的初始化
 document.addEventListener('DOMContentLoaded', function() {
     console.log('壽豐尋寶巴 AI 助手已準備就緒！');
-    console.log('使用的 API 端點:', API_URL);
-    console.log('使用模型：gemini-1.5-flash（免費版）');
+    console.log('使用 Groq API (llama-3.3-70b-versatile)');
     
     // 自動聚焦輸入框
     const input = document.getElementById('userInput');
