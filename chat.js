@@ -1,7 +1,7 @@
 // ⚠️ 重要：請將下面的 YOUR_API_KEY_HERE 替換成你的真實 Gemini API Key
 const API_KEY = 'AIzaSyBWitWs68dfgbZ0JT8k88yPGITUUFGu82c';
-// ✅ 使用正確的模型名稱
-const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+// ✅ 使用免費版支援的模型：gemini-1.5-flash
+const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
 
 // 壽豐景點資料庫
 const shoufengData = {
@@ -48,7 +48,7 @@ const shoufengData = {
     routes: {
         halfDay: '建議路線：鯉魚潭（2小時）→ 花蓮糖廠吃冰（1小時）→ 立川漁場（1.5小時）',
         fullDay: '建議路線：壽豐車站（30分鐘）→ 豐田文史館（1小時）→ 鯉魚潭（2小時）→ 午餐 → 立川漁場（1.5小時）→ 花蓮糖廠（1小時）',
-        photo: '最適合拍照：鯉魚潭（湖景)、壽豐車站（復古風）、東華大學（校園美景）'
+        photo: '最適合拍照：鯉魚潭（湖景）、壽豐車站（復古風）、東華大學（校園美景）'
     }
 };
 
@@ -282,6 +282,7 @@ document.getElementById('userInput')?.addEventListener('keypress', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('壽豐尋寶巴 AI 助手已準備就緒！');
     console.log('使用的 API 端點:', API_URL);
+    console.log('使用模型：gemini-1.5-flash（免費版）');
     
     // 自動聚焦輸入框
     const input = document.getElementById('userInput');
